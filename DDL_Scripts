@@ -1,0 +1,99 @@
+create schema DBMS_ProjectPhase2 ;
+use DBMS_ProjectPhase2;
+CREATE TABLE IF NOT EXISTS Hall (
+    hall_id VARCHAR(25),
+    capacity VARCHAR(100),
+    availability_label TEXT(10),
+    location TEXT(20),
+    name_hall VARCHAR(30),
+    PRIMARY KEY (hall_id)
+);
+CREATE TABLE IF NOT EXISTS Auditorium (
+    stage_size INT(20),
+    green_rooms INT(20),
+    hall_id VARCHAR(25) NOT NULL,
+    CONSTRAINT FOREIGN KEY (hall_id)
+        REFERENCES hall (hall_id)
+        ON DELETE CASCADE
+);
+CREATE TABLE IF NOT EXISTS Screen (
+    size INT(20),
+    screen_type VARCHAR(20),
+    experience VARCHAR(20),
+    hall_id VARCHAR(25) NOT NULL,
+    CONSTRAINT FOREIGN KEY (hall_id)
+        REFERENCES hall (hall_id)
+        ON DELETE CASCADE
+);
+CREATE TABLE IF NOT EXISTS shows (
+    show_id VARCHAR(25),
+    show_name VARCHAR(45),
+    synopsis VARCHAR(60),
+    PRIMARY KEY (show_id)
+);
+CREATE TABLE IF NOT EXISTS movie (
+    show_id VARCHAR(25),
+    release_date DATE,
+    cast VARCHAR(60),
+    director VARCHAR(40),
+    genre VARCHAR(25),
+    CONSTRAINT FOREIGN KEY (show_id)
+        REFERENCES shows (show_id)
+);
+CREATE TABLE IF NOT EXISTS performance (
+    show_id VARCHAR(25),
+    performers VARCHAR(40),
+    performance_type VARCHAR(25),
+    CONSTRAINT FOREIGN KEY (show_id)
+        REFERENCES shows (show_id)
+);
+CREATE TABLE IF NOT EXISTS customer (
+    customer_id VARCHAR(25),
+    email_id VARCHAR(50),
+    customer_name VARCHAR(25),
+    phone_no INT(10),
+    payment_details VARCHAR(40),
+    PRIMARY KEY (customer_id)
+);
+CREATE TABLE IF NOT EXISTS reservationfor_hallshow (
+    r_id VARCHAR(20),
+    r_date DATE,
+    r_time TIME,
+    hall_id VARCHAR(25),
+    show_id VARCHAR(25),
+    PRIMARY KEY (r_id),
+    CONSTRAINT FOREIGN KEY (hall_id)
+        REFERENCES hall (hall_id)
+        ON DELETE SET NULL,
+    CONSTRAINT FOREIGN KEY (show_id)
+        REFERENCES shows (show_id)
+        ON DELETE NO ACTION
+);
+CREATE TABLE IF NOT EXISTS event (
+    e_id VARCHAR(20),
+    show_id VARCHAR(20) NOT NULL,
+    time_event TIME,
+    date_event DATE,
+    ticket_price VARCHAR(20),
+    PRIMARY KEY (e_id),
+    CONSTRAINT FOREIGN KEY (show_id)
+        REFERENCES shows (show_id)
+        ON DELETE CASCADE
+);
+CREATE TABLE IF NOT EXISTS booking (
+    booking_id VARCHAR(20),
+    num_tickets INT(100),
+    price VARCHAR(45),
+    booking_date DATE,
+    booking_time TIME,
+    booking_lable VARCHAR(20),
+    e_id VARCHAR(25) NOT NULL,
+    customer_id VARCHAR(25) NOT NULL,
+    PRIMARY KEY (booking_id),
+    CONSTRAINT FOREIGN KEY (e_id)
+        REFERENCES event (e_id)
+        ON DELETE CASCADE,
+    CONSTRAINT FOREIGN KEY (customer_id)
+        REFERENCES customer (customer_id)
+        ON DELETE CASCADE
+);
