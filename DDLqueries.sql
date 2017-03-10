@@ -31,10 +31,10 @@ DELIMITER ;
 CREATE TABLE IF NOT EXISTS Auditorium (
     hall_id VARCHAR(25) NOT NULL,
     stage_size VARCHAR(25),
-    green_rooms INT(5),    
+    green_rooms INT(5),
     CONSTRAINT FOREIGN KEY (hall_id)
         REFERENCES hall (hall_id)
-        ON DELETE CASCADE
+        ON DELETE CASCADE ON UPDATE CASCADE
 );
 DELIMITER $$
  
@@ -58,7 +58,7 @@ CREATE TABLE IF NOT EXISTS Screen (
     experience VARCHAR(10),    
     CONSTRAINT FOREIGN KEY (hall_id)
         REFERENCES hall (hall_id)
-        ON DELETE CASCADE
+        ON DELETE CASCADE ON UPDATE CASCADE
 );
 DELIMITER $$
  
@@ -211,7 +211,7 @@ CREATE TABLE IF NOT EXISTS eventTable (
     PRIMARY KEY (e_id),
     CONSTRAINT FOREIGN KEY (show_id)
         REFERENCES shows (show_id)
-        ON DELETE CASCADE
+        ON DELETE CASCADE ON UPDATE CASCADE
 );
 USE `dbms_projectphase2`;
  
@@ -265,10 +265,10 @@ CREATE TABLE IF NOT EXISTS booking (
     PRIMARY KEY (booking_id),
     CONSTRAINT FOREIGN KEY (e_id)
         REFERENCES eventTable (e_id)
-        ON DELETE CASCADE,
+        ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT FOREIGN KEY (customer_id)
         REFERENCES customer (customer_id)
-        ON DELETE CASCADE
+        ON DELETE CASCADE ON UPDATE CASCADE
 );
 USE `dbms_projectphase2`;
  
