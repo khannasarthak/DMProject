@@ -1,6 +1,7 @@
 drop schema dbms_projectphase2;
 create schema dbms_projectphase2;
 use dbms_projectphase2;
+
 CREATE TABLE IF NOT EXISTS Hall (
     hall_id VARCHAR(25),
     capacity INT(3),
@@ -51,11 +52,27 @@ IF NEW.stage_size <= '0' or NEW.green_rooms <= 0
  
 END$$
 DELIMITER ;
+
+DELIMITER $$
+
+DROP TRIGGER IF EXISTS dbms_projectphase2.auditorium_AFTER_INSERT$$
+USE `dbms_projectphase2`$$
+CREATE DEFINER = CURRENT_USER TRIGGER `dbms_projectphase2`.`auditorium_AFTER_INSERT` AFTER INSERT ON `auditorium` FOR EACH ROW
+BEGIN
+IF stage_size <= '0' or green_rooms <= 0
+          THEN
+               SIGNAL SQLSTATE '45000'
+                    SET MESSAGE_TEXT = 'Cannot add or update row: invalid input ';
+          END IF;
+ 
+END$$
+DELIMITER ;
+
 CREATE TABLE IF NOT EXISTS Screen (
-	hall_id VARCHAR(25) NOT NULL,
+    hall_id VARCHAR(25) NOT NULL,
     size VARCHAR(25),
     screen_type VARCHAR(20),
-    experience VARCHAR(10),    
+    experience VARCHAR(10),
     CONSTRAINT FOREIGN KEY (hall_id)
         REFERENCES hall (hall_id)
         ON DELETE CASCADE ON UPDATE CASCADE
@@ -73,6 +90,19 @@ IF NEW.size = '0'
           END IF;
  
  
+END$$
+DELIMITER ;
+DELIMITER $$
+
+DROP TRIGGER IF EXISTS dbms_projectphase2.screen_AFTER_INSERT$$
+USE `dbms_projectphase2`$$
+CREATE DEFINER = CURRENT_USER TRIGGER `dbms_projectphase2`.`screen_AFTER_INSERT` AFTER INSERT ON `screen` FOR EACH ROW
+BEGIN
+IF size = '0' 
+          THEN
+               SIGNAL SQLSTATE '45000'
+                    SET MESSAGE_TEXT = 'Cannot add or update row: invalid input ';
+          END IF;
 END$$
 DELIMITER ;
 USE `dbms_projectphase2`;
@@ -93,7 +123,7 @@ DELIMITER ;
 
 CREATE TABLE IF NOT EXISTS shows (
     show_id VARCHAR(25),
-    show_name VARCHAR(100),    
+    show_name VARCHAR(100),
     PRIMARY KEY (show_id)
 );
 
@@ -126,7 +156,7 @@ CREATE TABLE IF NOT EXISTS reservation (
         ON DELETE SET NULL,
     CONSTRAINT FOREIGN KEY (show_id)
         REFERENCES shows (show_id)
-        ON DELETE NO ACTION
+        ON DELETE NO ACTION ON UPDATE NO ACTION
 );
 
 
@@ -255,13 +285,13 @@ CREATE TABLE IF NOT EXISTS customer (
 
 CREATE TABLE IF NOT EXISTS booking (
     booking_id VARCHAR(25),
-	e_id VARCHAR(25) NOT NULL,
+    e_id VARCHAR(25) NOT NULL,
     customer_id VARCHAR(25) NOT NULL,
     num_tickets INT(3),
     price INT(10),
     booking_date DATE,
     booking_time TIME,
-    booking_lable VARCHAR(10),   
+    booking_lable VARCHAR(10),
     PRIMARY KEY (booking_id),
     CONSTRAINT FOREIGN KEY (e_id)
         REFERENCES eventTable (e_id)
@@ -291,8 +321,8 @@ CREATE TABLE IF NOT EXISTS customer (
     customer_id VARCHAR(15),
     customer_name VARCHAR(25),
     phone_no VARCHAR(25),
-    email_id VARCHAR(70),    
-	payment_details VARCHAR(25),
+    email_id VARCHAR(70),
+    payment_details VARCHAR(25),
     PRIMARY KEY (customer_id)
 );
 USE `dbms_projectphase2`;
