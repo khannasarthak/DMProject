@@ -1,13 +1,14 @@
-drop schema dbms_projectphase2;
+drop schema IF EXISTS dbms_projectphase2;
 create schema dbms_projectphase2;
 use dbms_projectphase2;
 
+
 CREATE TABLE IF NOT EXISTS Hall (
     hall_id VARCHAR(25),
-    capacity INT(3),
+    capacity VARCHAR(10),
     availability_label VARCHAR(5),
     location VARCHAR(10),
-    name_hall VARCHAR(20),
+    name_hall VARCHAR(120),
     PRIMARY KEY (hall_id)
 );
 
@@ -53,20 +54,7 @@ IF NEW.stage_size <= '0' or NEW.green_rooms <= 0
 END$$
 DELIMITER ;
 
-DELIMITER $$
 
-DROP TRIGGER IF EXISTS dbms_projectphase2.auditorium_AFTER_INSERT$$
-USE `dbms_projectphase2`$$
-CREATE DEFINER = CURRENT_USER TRIGGER `dbms_projectphase2`.`auditorium_AFTER_INSERT` AFTER INSERT ON `auditorium` FOR EACH ROW
-BEGIN
-IF stage_size <= '0' or green_rooms <= 0
-          THEN
-               SIGNAL SQLSTATE '45000'
-                    SET MESSAGE_TEXT = 'Cannot add or update row: invalid input ';
-          END IF;
- 
-END$$
-DELIMITER ;
 
 CREATE TABLE IF NOT EXISTS Screen (
     hall_id VARCHAR(25) NOT NULL,
@@ -77,21 +65,7 @@ CREATE TABLE IF NOT EXISTS Screen (
         REFERENCES hall (hall_id)
         ON DELETE CASCADE ON UPDATE CASCADE
 );
-DELIMITER $$
- 
-DROP TRIGGER IF EXISTS dbms_projectphase2.screen_BEFORE_INSERT$$
-USE `dbms_projectphase2`$$
-CREATE DEFINER = CURRENT_USER TRIGGER `dbms_projectphase2`.`screen_BEFORE_INSERT` BEFORE INSERT ON `screen` FOR EACH ROW
-BEGIN
-IF NEW.size = '0' 
-          THEN
-               SIGNAL SQLSTATE '45000'
-                    SET MESSAGE_TEXT = 'Cannot add or update row: invalid input ';
-          END IF;
- 
- 
-END$$
-DELIMITER ;
+
 DELIMITER $$
 
 DROP TRIGGER IF EXISTS dbms_projectphase2.screen_AFTER_INSERT$$
@@ -105,6 +79,9 @@ IF size = '0'
           END IF;
 END$$
 DELIMITER ;
+
+
+
 USE `dbms_projectphase2`;
 
 DELIMITER $$
@@ -113,7 +90,11 @@ DROP TRIGGER IF EXISTS dbms_projectphase2.hall_AFTER_INSERT$$
 USE `dbms_projectphase2`$$
 CREATE DEFINER = CURRENT_USER TRIGGER `dbms_projectphase2`.`hall_AFTER_INSERT` AFTER INSERT ON `hall` FOR EACH ROW
 BEGIN
-IF COUNT(SCREEN.hall_id) + COUNT(Auditorium.hall_id) > COUNT(HALL.HALL_ID)
+DECLARE HALLcount INT;
+DECLARE SCREENcount INT;
+set HALLcount = (select COUNT(HALL_ID) from HALL );
+SET SCREENcount = (select COUNT(HALL_ID) from SCREEN );
+IF SCREENcount > HALLcount
 		THEN
 			SIGNAL SQLSTATE '45000'
 				  SET MESSAGE_TEXT = 'Cannot add or update row: invalid input ';
