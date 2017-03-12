@@ -68,9 +68,9 @@ CREATE TABLE IF NOT EXISTS Screen (
 
 DELIMITER $$
 
-DROP TRIGGER IF EXISTS dbms_projectphase2.screen_AFTER_INSERT$$
+DROP TRIGGER IF EXISTS dbms_projectphase2.screen_BEFORE_INSERT$$
 USE `dbms_projectphase2`$$
-CREATE DEFINER = CURRENT_USER TRIGGER `dbms_projectphase2`.`screen_AFTER_INSERT` AFTER INSERT ON `screen` FOR EACH ROW
+CREATE DEFINER = CURRENT_USER TRIGGER `dbms_projectphase2`.`screen_BEFORE_INSERT` BEFORE INSERT ON `screen` FOR EACH ROW
 BEGIN
 IF size = '0' 
           THEN
