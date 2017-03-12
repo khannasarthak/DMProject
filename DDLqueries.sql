@@ -247,7 +247,10 @@ DROP TRIGGER IF EXISTS dbms_projectphase2.eventtable_AFTER_INSERT$$
 USE `dbms_projectphase2`$$
 CREATE DEFINER = CURRENT_USER TRIGGER `dbms_projectphase2`.`eventtable_AFTER_INSERT` AFTER INSERT ON `eventtable` FOR EACH ROW
 BEGIN
-	IF date_event < reservation.r_date
+DECLARE EVENTDATE INT;
+set EVENTDATE = (select count(*) from eventTable ET, reservation  RES WHERE ET.show_id  = RES.show_id  and ET.date_event  < RES.R_DATE) ;
+
+	IF EVENTDATE != 0
 		THEN
                SIGNAL SQLSTATE '45000'
                     SET MESSAGE_TEXT = 'Cannot add or update row: invalid input';
