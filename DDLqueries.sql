@@ -2,9 +2,8 @@ drop schema IF EXISTS dbms_projectphase2;
 create schema dbms_projectphase2;
 use dbms_projectphase2;
 
-
 CREATE TABLE IF NOT EXISTS Hall (
-    hall_id VARCHAR(25),
+    hall_id VARCHAR(25) ,
     capacity VARCHAR(10),
     availability_label VARCHAR(5),
     location VARCHAR(10),
@@ -13,7 +12,6 @@ CREATE TABLE IF NOT EXISTS Hall (
 );
 
 DELIMITER $$
-
 DROP TRIGGER IF EXISTS dbms_projectphase2.hall_BEFORE_INSERT$$
 USE `dbms_projectphase2`$$
 CREATE DEFINER=`root`@`localhost` TRIGGER `dbms_projectphase2`.`hall_BEFORE_INSERT` BEFORE INSERT ON `hall` FOR EACH ROW
@@ -23,13 +21,8 @@ IF NEW.capacity = 0
                SIGNAL SQLSTATE '45000'
                     SET MESSAGE_TEXT = 'Cannot add or update row: invalid input ';
           END IF;
-
-
 END$$
 DELIMITER ;
-
-
-
 CREATE TABLE IF NOT EXISTS Auditorium (
     hall_id VARCHAR(25) NOT NULL,
     stage_size VARCHAR(25),
@@ -49,12 +42,8 @@ IF NEW.stage_size <= '0' or NEW.green_rooms <= 0
                SIGNAL SQLSTATE '45000'
                     SET MESSAGE_TEXT = 'Cannot add or update row: invalid input ';
           END IF;
- 
- 
 END$$
 DELIMITER ;
-
-
 
 CREATE TABLE IF NOT EXISTS Screen (
     hall_id VARCHAR(25) NOT NULL,
@@ -72,17 +61,13 @@ DROP TRIGGER IF EXISTS dbms_projectphase2.screen_BEFORE_INSERT$$
 USE `dbms_projectphase2`$$
 CREATE DEFINER = CURRENT_USER TRIGGER `dbms_projectphase2`.`screen_BEFORE_INSERT` BEFORE INSERT ON `screen` FOR EACH ROW
 BEGIN
-IF size = '0' 
+IF NEW.size = '0' 
           THEN
                SIGNAL SQLSTATE '45000'
                     SET MESSAGE_TEXT = 'Cannot add or update row: invalid input ';
           END IF;
 END$$
 DELIMITER ;
-
-
-
-USE `dbms_projectphase2`;
 
 DELIMITER $$
 
@@ -108,8 +93,7 @@ CREATE TABLE IF NOT EXISTS shows (
     PRIMARY KEY (show_id)
 );
 
-USE `dbms_projectphase2`;
- 
+
 DELIMITER $$
  
 DROP TRIGGER IF EXISTS dbms_projectphase2.shows_BEFORE_INSERT$$
@@ -129,15 +113,15 @@ CREATE TABLE IF NOT EXISTS reservation (
     r_id VARCHAR(25),
     r_date DATE,
     r_time TIME,
-    hall_id VARCHAR(25),
-    show_id VARCHAR(25),
+    hall_id VARCHAR(25) NOT NULL DEFAULT 'OOOO0',
+    show_id VARCHAR(25) NOT NULL,
     PRIMARY KEY (r_id),
     CONSTRAINT FOREIGN KEY (hall_id)
         REFERENCES hall (hall_id)
-        ON DELETE SET NULL,
+        ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT FOREIGN KEY (show_id)
         REFERENCES shows (show_id)
-        ON DELETE NO ACTION ON UPDATE NO ACTION
+        ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 
@@ -167,15 +151,13 @@ CREATE TABLE IF NOT EXISTS movie (
         REFERENCES shows (show_id)
 );
 
-
-
 DELIMITER $$
  
 DROP TRIGGER IF EXISTS dbms_projectphase2.movie_BEFORE_INSERT$$
 USE `dbms_projectphase2`$$
 CREATE DEFINER = CURRENT_USER TRIGGER `dbms_projectphase2`.`movie_BEFORE_INSERT` BEFORE INSERT ON `movie` FOR EACH ROW
 BEGIN
-IF NEW.rating <= '0' 
+IF NEW.rating < '0' 
           THEN
                SIGNAL SQLSTATE '45000'
                     SET MESSAGE_TEXT = 'Cannot add or update row: invalid input ';
@@ -194,7 +176,7 @@ CREATE TABLE IF NOT EXISTS performance (
     CONSTRAINT FOREIGN KEY (show_id)
         REFERENCES shows (show_id)
 );
-USE `dbms_projectphase2`;
+
  
 DELIMITER $$
  
@@ -232,7 +214,7 @@ DROP TRIGGER IF EXISTS dbms_projectphase2.eventTable_BEFORE_INSERT$$
 USE `dbms_projectphase2`$$
 CREATE DEFINER = CURRENT_USER TRIGGER `dbms_projectphase2`.`eventTable_BEFORE_INSERT` BEFORE INSERT ON `eventTable` FOR EACH ROW
 BEGIN
-IF NEW.ticket_price <= '0' 
+IF NEW.ticket_price < '0' 
           THEN
                SIGNAL SQLSTATE '45000'
                     SET MESSAGE_TEXT = 'Cannot add or update row: invalid input';
@@ -301,16 +283,7 @@ IF NEW.num_tickets <= 0 or new.price = 0
  
 END$$
 DELIMITER ;
-CREATE TABLE IF NOT EXISTS customer (
-    customer_id VARCHAR(15),
-    customer_name VARCHAR(25),
-    phone_no VARCHAR(25),
-    email_id VARCHAR(70),
-    payment_details VARCHAR(25),
-    PRIMARY KEY (customer_id)
-);
-USE `dbms_projectphase2`;
- 
+
 DELIMITER $$
  
 DROP TRIGGER IF EXISTS dbms_projectphase2.customer_BEFORE_INSERT$$
@@ -322,7 +295,69 @@ IF NEW.phone_no = '0'
                SIGNAL SQLSTATE '45000'
                     SET MESSAGE_TEXT = 'Cannot add or update row: invalid input';
   END IF;
- 
- 
 END$$
 DELIMITER ;
+
+LOAD DATA LOCAL INFILE 'D:/shows.csv'
+INTO TABLE shows
+FIELDS TERMINATED BY ','
+    ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+IGNORE 1 LINES
+(show_id, show_name);
+
+LOAD DATA LOCAL INFILE 'D:/movies.csv'
+INTO TABLE movie
+FIELDS TERMINATED BY ','
+    ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+IGNORE 1 LINES
+(show_id,movie_cast, release_date, director, rating);
+
+LOAD DATA LOCAL INFILE 'D:/performances.csv'
+INTO TABLE performance
+FIELDS TERMINATED BY ','
+    ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+IGNORE 1 LINES
+(show_id, performers, performance_type);
+
+
+LOAD DATA LOCAL INFILE 'D:/customer.csv'
+INTO TABLE customer
+FIELDS TERMINATED BY ','
+    ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+IGNORE 1 LINES
+(customer_id,customer_name, phone_no, email_id, payment_details );
+
+LOAD DATA LOCAL INFILE 'D:/hall.csv'
+INTO TABLE hall
+FIELDS TERMINATED BY ','
+    ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+IGNORE 1 LINES
+(hall_id, capacity, availability_label, location, name_hall);
+
+LOAD DATA LOCAL INFILE 'D:/auditorium.csv'
+INTO TABLE auditorium
+FIELDS TERMINATED BY ','
+    ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+IGNORE 1 LINES
+(hall_id, stage_size, green_rooms);
+
+LOAD DATA LOCAL INFILE 'D:/screen.csv'
+INTO TABLE screen
+FIELDS TERMINATED BY ','
+    ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+IGNORE 1 LINES
+(hall_id, size, screen_type, experience);
+
+
+
+
+SET @a='no';
+
+insert into hall values('1001','1022',@a,'eew','e3');
