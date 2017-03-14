@@ -131,7 +131,7 @@ DROP TRIGGER IF EXISTS dbms_projectphase2.reservation_BEFORE_INSERT$$
 USE `dbms_projectphase2`$$
 CREATE DEFINER = CURRENT_USER TRIGGER `dbms_projectphase2`.`reservation_BEFORE_INSERT` BEFORE INSERT ON `reservation` FOR EACH ROW
 BEGIN
-IF NEW.r_date = 0 or NEW.r_time= 0 
+IF NEW.r_date = 0 
           THEN
                SIGNAL SQLSTATE '45000'
                     SET MESSAGE_TEXT = 'Cannot add or update row: invalid input';
@@ -355,7 +355,29 @@ LINES TERMINATED BY '\n'
 IGNORE 1 LINES
 (hall_id, size, screen_type, experience);
 
+LOAD DATA LOCAL INFILE 'D:/reservation.csv'
+INTO TABLE reservation
+FIELDS TERMINATED BY ','
+    ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+IGNORE 1 LINES
+(r_id, show_id, hall_id, r_date, r_time);
 
+LOAD DATA LOCAL INFILE 'D:/eventTable.csv'
+INTO TABLE eventtable
+FIELDS TERMINATED BY ','
+    ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+IGNORE 1 LINES
+(e_id, show_id, time_event, date_event, ticket_price);
+
+LOAD DATA LOCAL INFILE 'D:/booking.csv'
+INTO TABLE booking
+FIELDS TERMINATED BY ','
+    ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+IGNORE 1 LINES
+(booking_id, e_id, customer_id, num_tickets, price, booking_date, booking_time, booking_lable);
 
 
 SET @a='no';
