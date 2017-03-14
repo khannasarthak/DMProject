@@ -2,7 +2,6 @@
 from faker import Factory
 import pandas as pd
 import random
-import numpy as np
 fake = Factory.create()
 
 def createNames(n):
@@ -225,7 +224,7 @@ def generateReservationCSV(n):
     df['r_time'] = r_time    
     
     print('Generating Reservation')
-    df.to_csv('reservation.csv', sep=',', quotechar='"', index=False)
+    df.to_csv('reservation.csv', sep=',', quotechar='"', index=False,date_format='%Y-%m-%d')
 
 def generateEventTable(n):
     df = pd.DataFrame()    
@@ -244,18 +243,31 @@ def generateEventTable(n):
         ids.append(_)
         ticket_price.append(random.choice(r))
         time_event.append(random.choice(t))
-        show_id.append(random.choice(reservation_table.show_id))
-                     
+        s = random.choice(reservation_table.show_id)
+        show_id.append(s)
+        """        
+        if s not in show_id:
+            #if 2 show ids are distinct check time, date and hall_id for that index is not same
+            show_id.append(s)
+        else:
+            indices = [i for i, x in enumerate(show_id) if x == s]
+            for p in indices:
+                for q in indices:
+                    if (time_event[p] == time_event[q] and date_event[p] == date_event[q]):
+                        #randomly select a value not present in the show_id list
+            #print(time_event[_])
+       # print(time_event[_-1]) 
+       """
     df['e_id'] = ids
     df['show_id'] = show_id
     df['time_event'] = time_event
     df['date_event'] = date_event
-    df['ticket_price'] = ticket_price
-    
+    df['ticket_price'] = ticket_price    
     # Implement constrait of no 2 shows reserved in same hall air on same date and time
-    df.show_id.drop_duplicates()
+    #df.show_id.drop_duplicates()
     print('Generating EventTable')
-    df.to_csv('eventTable.csv', sep=',', quotechar='"', index=False)
+    #print(df)    
+    df.to_csv('eventTable.csv', sep=',', quotechar='"', index=False,date_format='%Y-%m-%d')
 
 def generateBookingTable(n):
     df = pd.DataFrame()
@@ -278,7 +290,7 @@ def generateBookingTable(n):
         customer_id.append(random.choice(customer_table.customer_id))
         s = random.choice(event_table.e_id)   
         e_id.append(s)                 
-        price.append((event_table.ticket_price.loc[s]).astype(int) * num_tickets[_-1])
+        price.append((event_table.ticket_price.loc[s-1]).astype(int) * num_tickets[_-1])
              
     df['booking_id'] = ids
     df['e_id'] = e_id
@@ -289,16 +301,16 @@ def generateBookingTable(n):
     df['booking_time'] = booking_time
     df['booking_label'] = booking_label       
     print ('Generating Booking Table')
-    df.to_csv('booking.csv', sep=',', quotechar='"', index=False)
+    df.to_csv('booking.csv', sep=',', quotechar='"', index=False,date_format='%Y-%m-%d')
     
 def megacreate():
-     #generateCustomerCSV(1000)
-     #generateHallCSV(1000)
-     #generateScreenCSV(500)
-     #generateAuditoriumCSV(500)
-     #generateShowCSV(1000)
-     #generatePerformancesCSV(500)
-     #generateMoviesCSV(500)
+     generateCustomerCSV(1000)
+     generateHallCSV(1000)
+     generateScreenCSV(500)
+     generateAuditoriumCSV(500)
+     generateShowCSV(1000)
+     generatePerformancesCSV(500)
+     generateMoviesCSV(500)
      generateReservationCSV(2000)
      generateEventTable(2000)
      generateBookingTable(3000)
