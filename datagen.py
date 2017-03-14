@@ -76,7 +76,7 @@ def createTickets(n):
     for _ in range(0,n):
         s.append((fake.random_int(min = 1, max = 10)))
     return s
-    
+
 def generateCustomerCSV(n):
     a = createProfile(n)
     credit = cc(n)
@@ -199,12 +199,12 @@ def generateReservationCSV(n):
     ids = []
     show_id = []
     hall_id =[]
-    
+
     movies_table = pd.read_csv('movies.csv')
-    performance_table = pd.read_csv('performances.csv') 
+    performance_table = pd.read_csv('performances.csv')
     screen_table = pd.read_csv('screen.csv')
     auditorium_table = pd.read_csv('auditorium.csv')
-    
+
     r_date = createRandomDate(n,'8/1/2016','12/31/2016')
     r_time = createRandomTime(n,'00:00','23:59')
     # preventing same shows occurr in same halls
@@ -214,44 +214,47 @@ def generateReservationCSV(n):
         show_id.append(s)
         hall_id.append(random.choice(screen_table.hall_id))
         indices = [i for i, x in enumerate(show_id) if x == s]
-        if len(indices) > 1:            
+        if len(indices) > 1:
             h = random.sample(screen_table.hall_id,len(indices))
             for p,j in zip(indices,h):
                 hall_id[p] = j
-    
+
     for _ in range((n/2)+1,n+1):
         ids.append(_)
         s = random.choice(performance_table.show_id)
         show_id.append(s)
         hall_id.append(random.choice(auditorium_table.hall_id))
         indices = [i for i, x in enumerate(show_id) if x == s]
-        if len(indices) > 1:            
+        if len(indices) > 1:
             h = random.sample(auditorium_table.hall_id,len(indices))
             for p,j in zip(indices,h):
                 hall_id[p] = j
-                
-    df['r_id'] = ids 
+
+    df['r_id'] = ids
     df['show_id'] = show_id
     df['hall_id'] = hall_id
     df['r_date'] = r_date
-    df['r_time'] = r_time    
-    
+    df['r_time'] = r_time
+
     print('Generating Reservation')
     df.to_csv('reservation.csv', sep=',', quotechar='"', index=False,date_format='%Y-%m-%d')
 
 def generateEventTable(n):
-    df = pd.DataFrame()    
+    df = pd.DataFrame()
+    dr = pd.DataFrame()
+    test = pd.DataFrame()
+    test1 = pd.DataFrame()
     ids = []
     show_id = []
     time_event = []
     ticket_price = []
-    
+
     reservation_table = pd.read_csv('reservation.csv')
-    
-    date_event = createRandomDate(n,'8/1/2017','12/31/2017')    
+
+    date_event = createRandomDate(n,'8/1/2017','12/31/2017')
     t = ['09:00:00','12:00:00','15:00:00','18:00:00','21:00:00']
     r = [20,25,30,35,40,45,50]
-    
+
     for _ in range(1,n+1):
         ids.append(_)
         ticket_price.append(random.choice(r))
@@ -263,8 +266,8 @@ def generateEventTable(n):
             #do something
         #else:
             #it implies a show has single reservation
-        
-        """        
+
+        """
         if s not in show_id:
             #if 2 show ids are distinct check time, date and hall_id for that index is not same
             show_id.append(s)
@@ -275,18 +278,29 @@ def generateEventTable(n):
                     if (time_event[p] == time_event[q] and date_event[p] == date_event[q]):
                         #randomly select a value not present in the show_id list
             #print(time_event[_])
-       # print(time_event[_-1]) 
+       # print(time_event[_-1])
        #show_id.append(s)
        """
     df['e_id'] = ids
     df['show_id'] = show_id
     df['time_event'] = time_event
     df['date_event'] = date_event
-    df['ticket_price'] = ticket_price    
+    df['ticket_price'] = ticket_price
+    dr['r_showid'] = reservation_table.show_id
+    dr['r_hallid'] = reservation_table.hall_id
+    test = df.sort_values(by='show_id', ascending=1)
+    test1 = dr.sort_values(by='r_showid', ascending=1)
+    test['hall_id'] = test1['r_hallid']
+
+
+
+    for i in (test.duplicated(['show_id','date_event','time_event', 'hall_id' ])):
+        if i==True:
+            print ('Conflicting values generated, CSV will not be written')
     # Implement constrait of no 2 shows reserved in same hall air on same date and time
     #df.show_id.drop_duplicates()
     print('Generating EventTable')
-    #print(df)    
+    #print(df)
     df.to_csv('eventTable.csv', sep=',', quotechar='"', index=False,date_format='%Y-%m-%d')
 
 def generateBookingTable(n):
@@ -297,32 +311,32 @@ def generateBookingTable(n):
     num_tickets = createTickets(n)
     price = []
     booking_label = []
-    
+
     event_table = pd.read_csv('eventTable.csv')
     customer_table = pd.read_csv('customer.csv')
-    
+
     booking_date = createRandomDate(n,'1/1/2017','7/31/2017')
     booking_time = createRandomTime(n,'00:00','23:59')
-    
+
     for _ in range(1,n+1):
         ids.append(_)
         booking_label.append('YES')
         customer_id.append(random.choice(customer_table.customer_id))
-        s = random.choice(event_table.e_id)   
-        e_id.append(s)                 
+        s = random.choice(event_table.e_id)
+        e_id.append(s)
         price.append((event_table.ticket_price.loc[s-1]).astype(int) * num_tickets[_-1])
-             
+
     df['booking_id'] = ids
     df['e_id'] = e_id
-    df['customer_id'] = customer_id    
+    df['customer_id'] = customer_id
     df['num_tickets'] = num_tickets
     df['price'] = price
     df['booking_date'] = booking_date
     df['booking_time'] = booking_time
-    df['booking_label'] = booking_label       
+    df['booking_label'] = booking_label
     print ('Generating Booking Table')
     df.to_csv('booking.csv', sep=',', quotechar='"', index=False,date_format='%Y-%m-%d')
-    
+
 def megacreate():
      generateCustomerCSV(1000)
      generateHallCSV(1000)
@@ -337,5 +351,3 @@ def megacreate():
 
 
 megacreate()
-
-
