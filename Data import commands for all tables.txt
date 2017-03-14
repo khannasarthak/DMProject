@@ -1,0 +1,81 @@
+ 
+LOAD DATA LOCAL INFILE 'D:/hall.csv'
+INTO TABLE hall
+FIELDS TERMINATED BY ','
+    ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+IGNORE 1 LINES
+(hall_id, capacity, availability_label, location, name_hall);
+
+LOAD DATA LOCAL INFILE 'D:/auditorium.csv'
+INTO TABLE auditorium
+FIELDS TERMINATED BY ','
+    ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+IGNORE 1 LINES
+(hall_id, stage_size, green_rooms);
+ 
+LOAD DATA LOCAL INFILE 'D:/screen.csv'
+INTO TABLE screen
+FIELDS TERMINATED BY ','
+    ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+IGNORE 1 LINES
+(hall_id, size, screen_type, experience);
+
+LOAD DATA LOCAL INFILE 'D:/shows.csv'
+INTO TABLE shows
+FIELDS TERMINATED BY ','
+    ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+IGNORE 1 LINES
+(show_id, show_name);
+ 
+LOAD DATA LOCAL INFILE 'D:/movies.csv'
+INTO TABLE movie
+FIELDS TERMINATED BY ','
+    ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+IGNORE 1 LINES
+(show_id,movie_cast, release_date, director, rating);
+ 
+LOAD DATA LOCAL INFILE 'D:/performances.csv'
+INTO TABLE performance
+FIELDS TERMINATED BY ','
+    ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+IGNORE 1 LINES
+(show_id, performers, performance_type);
+ 
+ 
+LOAD DATA LOCAL INFILE 'D:/customer.csv'
+INTO TABLE customer
+FIELDS TERMINATED BY ','
+    ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+IGNORE 1 LINES
+(customer_id,customer_name, phone_no, email_id, payment_details );
+
+LOAD DATA LOCAL INFILE 'D:/reservation.csv'
+INTO TABLE reservation
+FIELDS TERMINATED BY ','
+    ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+IGNORE 1 LINES
+(r_id, show_id, hall_id, r_date, r_time);
+
+LOAD DATA LOCAL INFILE 'D:/eventTable.csv'
+INTO TABLE eventtable
+FIELDS TERMINATED BY ','
+    ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+IGNORE 1 LINES
+(e_id, show_id, time_event, date_event, ticket_price);
+
+LOAD DATA LOCAL INFILE 'D:/booking.csv'
+INTO TABLE booking
+FIELDS TERMINATED BY ','
+    ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+IGNORE 1 LINES
+(booking_id, e_id, customer_id, num_tickets, price, booking_date, booking_time, booking_lable);
