@@ -207,16 +207,29 @@ def generateReservationCSV(n):
     
     r_date = createRandomDate(n,'8/1/2016','12/31/2016')
     r_time = createRandomTime(n,'00:00','23:59')
-    
+    # preventing same shows occurr in same halls
     for _ in range(1,(n/2)+1):
         ids.append(_)
-        show_id.append(random.choice(movies_table.show_id))
+        s = random.choice(movies_table.show_id)
+        show_id.append(s)
         hall_id.append(random.choice(screen_table.hall_id))
+        indices = [i for i, x in enumerate(show_id) if x == s]
+        if len(indices) > 1:            
+            h = random.sample(screen_table.hall_id,len(indices))
+            for p,j in zip(indices,h):
+                hall_id[p] = j
+    
     for _ in range((n/2)+1,n+1):
         ids.append(_)
-        show_id.append(random.choice(performance_table.show_id))
+        s = random.choice(performance_table.show_id)
+        show_id.append(s)
         hall_id.append(random.choice(auditorium_table.hall_id))
-        
+        indices = [i for i, x in enumerate(show_id) if x == s]
+        if len(indices) > 1:            
+            h = random.sample(auditorium_table.hall_id,len(indices))
+            for p,j in zip(indices,h):
+                hall_id[p] = j
+                
     df['r_id'] = ids 
     df['show_id'] = show_id
     df['hall_id'] = hall_id
@@ -245,6 +258,12 @@ def generateEventTable(n):
         time_event.append(random.choice(t))
         s = random.choice(reservation_table.show_id)
         show_id.append(s)
+        #indices = [i for i, x in enumerate(reservation_table.show_id) if x == s]
+        #if len(indices) > 1:
+            #do something
+        #else:
+            #it implies a show has single reservation
+        
         """        
         if s not in show_id:
             #if 2 show ids are distinct check time, date and hall_id for that index is not same
@@ -257,6 +276,7 @@ def generateEventTable(n):
                         #randomly select a value not present in the show_id list
             #print(time_event[_])
        # print(time_event[_-1]) 
+       #show_id.append(s)
        """
     df['e_id'] = ids
     df['show_id'] = show_id
