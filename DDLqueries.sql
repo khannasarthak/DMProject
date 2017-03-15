@@ -77,9 +77,11 @@ CREATE DEFINER = CURRENT_USER TRIGGER `dbms_projectphase2`.`hall_AFTER_INSERT` A
 BEGIN
 DECLARE HALLcount INT;
 DECLARE SCREENcount INT;
+DECLARE Audicount INT;
 set HALLcount = (select COUNT(HALL_ID) from HALL );
 SET SCREENcount = (select COUNT(HALL_ID) from SCREEN );
-IF SCREENcount > HALLcount
+SET Audicount = (select COUNT(HALL_ID) from auditorium );
+IF SCREENcount + Audicount > HALLcount
 		THEN
 			SIGNAL SQLSTATE '45000'
 				  SET MESSAGE_TEXT = 'Cannot add or update row: invalid input ';
@@ -113,7 +115,7 @@ CREATE TABLE IF NOT EXISTS reservation (
     r_id VARCHAR(25),
     r_date DATE,
     r_time TIME,
-    hall_id VARCHAR(25) NOT NULL DEFAULT 'OOOO0',
+    hall_id VARCHAR(25) NOT NULL,
     show_id VARCHAR(25) NOT NULL,
     PRIMARY KEY (r_id),
     CONSTRAINT FOREIGN KEY (hall_id)
@@ -382,4 +384,4 @@ IGNORE 1 LINES
 
 SET @a='no';
 
-insert into hall values('1001','1022',@a,'eew','e3');
+insert into hall values('1001','1022',@a,'Tempe','Improv');
