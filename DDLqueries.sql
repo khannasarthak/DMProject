@@ -216,7 +216,7 @@ DROP TRIGGER IF EXISTS dbms_projectphase2.eventTable_BEFORE_INSERT$$
 USE `dbms_projectphase2`$$
 CREATE DEFINER = CURRENT_USER TRIGGER `dbms_projectphase2`.`eventTable_BEFORE_INSERT` BEFORE INSERT ON `eventTable` FOR EACH ROW
 BEGIN
-IF NEW.ticket_price < '0' 
+IF NEW.ticket_price <= '0' 
           THEN
                SIGNAL SQLSTATE '45000'
                     SET MESSAGE_TEXT = 'Cannot add or update row: invalid input';
