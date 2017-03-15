@@ -1,5 +1,5 @@
 SELECT 
-    performance_type, COUNT(performance.performers)
+    performance_type, COUNT(*)
 FROM
     shows
         JOIN
