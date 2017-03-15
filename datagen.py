@@ -1,4 +1,4 @@
-# coding=utf-8
+    # coding=utf-8
 from faker import Factory
 import pandas as pd
 import random
@@ -294,9 +294,9 @@ def generateEventTable(n):
 
 
 
-    for i in (test.duplicated(['show_id','date_event','time_event', 'hall_id' ])):
-        if i==True:
-            print ('Conflicting values generated, CSV will not be written')
+    # for i in (test.duplicated(['show_id','date_event','time_event', 'hall_id' ])):  will add later, 
+    #     if i==True:
+    #         print ('Conflicting values generated, CSV will not be written')
     # Implement constrait of no 2 shows reserved in same hall air on same date and time
     #df.show_id.drop_duplicates()
     print('Generating EventTable')
