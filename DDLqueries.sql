@@ -300,7 +300,7 @@ IF NEW.phone_no = '0'
 END$$
 DELIMITER ;
 
-LOAD DATA LOCAL INFILE 'D:/shows.csv'
+LOAD DATA LOCAL INFILE 'C:/DBMS_Project/shows.csv'
 INTO TABLE shows
 FIELDS TERMINATED BY ','
     ENCLOSED BY '"'
@@ -308,7 +308,7 @@ LINES TERMINATED BY '\n'
 IGNORE 1 LINES
 (show_id, show_name);
 
-LOAD DATA LOCAL INFILE 'D:/movies.csv'
+LOAD DATA LOCAL INFILE 'C:/DBMS_Project/movies.csv'
 INTO TABLE movie
 FIELDS TERMINATED BY ','
     ENCLOSED BY '"'
@@ -316,7 +316,7 @@ LINES TERMINATED BY '\n'
 IGNORE 1 LINES
 (show_id,movie_cast, release_date, director, rating);
 
-LOAD DATA LOCAL INFILE 'D:/performances.csv'
+LOAD DATA LOCAL INFILE 'C:/DBMS_Project/performances.csv'
 INTO TABLE performance
 FIELDS TERMINATED BY ','
     ENCLOSED BY '"'
@@ -325,7 +325,7 @@ IGNORE 1 LINES
 (show_id, performers, performance_type);
 
 
-LOAD DATA LOCAL INFILE 'D:/customer.csv'
+LOAD DATA LOCAL INFILE 'C:/DBMS_Project/customer.csv'
 INTO TABLE customer
 FIELDS TERMINATED BY ','
     ENCLOSED BY '"'
@@ -333,7 +333,7 @@ LINES TERMINATED BY '\n'
 IGNORE 1 LINES
 (customer_id,customer_name, phone_no, email_id, payment_details );
 
-LOAD DATA LOCAL INFILE 'D:/hall.csv'
+LOAD DATA LOCAL INFILE 'C:/DBMS_Project/hall.csv'
 INTO TABLE hall
 FIELDS TERMINATED BY ','
     ENCLOSED BY '"'
@@ -341,7 +341,7 @@ LINES TERMINATED BY '\n'
 IGNORE 1 LINES
 (hall_id, capacity, availability_label, location, name_hall);
 
-LOAD DATA LOCAL INFILE 'D:/auditorium.csv'
+LOAD DATA LOCAL INFILE 'C:/DBMS_Project/auditorium.csv'
 INTO TABLE auditorium
 FIELDS TERMINATED BY ','
     ENCLOSED BY '"'
@@ -349,7 +349,7 @@ LINES TERMINATED BY '\n'
 IGNORE 1 LINES
 (hall_id, stage_size, green_rooms);
 
-LOAD DATA LOCAL INFILE 'D:/screen.csv'
+LOAD DATA LOCAL INFILE 'C:/DBMS_Project/screen.csv'
 INTO TABLE screen
 FIELDS TERMINATED BY ','
     ENCLOSED BY '"'
@@ -357,7 +357,7 @@ LINES TERMINATED BY '\n'
 IGNORE 1 LINES
 (hall_id, size, screen_type, experience);
 
-LOAD DATA LOCAL INFILE 'D:/reservation.csv'
+LOAD DATA LOCAL INFILE 'C:/DBMS_Project/reservation.csv'
 INTO TABLE reservation
 FIELDS TERMINATED BY ','
     ENCLOSED BY '"'
@@ -365,7 +365,7 @@ LINES TERMINATED BY '\n'
 IGNORE 1 LINES
 (r_id, show_id, hall_id, r_date, r_time);
 
-LOAD DATA LOCAL INFILE 'D:/eventTable.csv'
+LOAD DATA LOCAL INFILE 'C:/DBMS_Project/eventTable.csv'
 INTO TABLE eventtable
 FIELDS TERMINATED BY ','
     ENCLOSED BY '"'
@@ -373,7 +373,7 @@ LINES TERMINATED BY '\n'
 IGNORE 1 LINES
 (e_id, show_id, time_event, date_event, ticket_price);
 
-LOAD DATA LOCAL INFILE 'D:/booking.csv'
+LOAD DATA LOCAL INFILE 'C:/DBMS_Project/booking.csv'
 INTO TABLE booking
 FIELDS TERMINATED BY ','
     ENCLOSED BY '"'
