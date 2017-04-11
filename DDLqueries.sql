@@ -1,6 +1,6 @@
-drop schema IF EXISTS dbms_projectphase2;
-create schema dbms_projectphase2;
-use dbms_projectphase2;
+drop schema IF EXISTS dbms_projectphase3;
+create schema dbms_projectphase3;
+use dbms_projectphase3;
 
 CREATE TABLE IF NOT EXISTS Hall (
     hall_id VARCHAR(25) ,
@@ -12,9 +12,9 @@ CREATE TABLE IF NOT EXISTS Hall (
 );
 
 DELIMITER $$
-DROP TRIGGER IF EXISTS dbms_projectphase2.hall_BEFORE_INSERT$$
-USE `dbms_projectphase2`$$
-CREATE DEFINER=`root`@`localhost` TRIGGER `dbms_projectphase2`.`hall_BEFORE_INSERT` BEFORE INSERT ON `hall` FOR EACH ROW
+DROP TRIGGER IF EXISTS dbms_projectphase3.hall_BEFORE_INSERT$$
+USE `dbms_projectphase3`$$
+CREATE DEFINER=`root`@`localhost` TRIGGER `dbms_projectphase3`.`hall_BEFORE_INSERT` BEFORE INSERT ON `hall` FOR EACH ROW
 BEGIN
 IF NEW.capacity = 0 
           THEN
@@ -33,9 +33,9 @@ CREATE TABLE IF NOT EXISTS Auditorium (
 );
 DELIMITER $$
  
-DROP TRIGGER IF EXISTS dbms_projectphase2.auditorium_BEFORE_INSERT$$
-USE `dbms_projectphase2`$$
-CREATE DEFINER = CURRENT_USER TRIGGER `dbms_projectphase2`.`auditorium_BEFORE_INSERT` BEFORE INSERT ON `auditorium` FOR EACH ROW
+DROP TRIGGER IF EXISTS dbms_projectphase3.auditorium_BEFORE_INSERT$$
+USE `dbms_projectphase3`$$
+CREATE DEFINER = CURRENT_USER TRIGGER `dbms_projectphase3`.`auditorium_BEFORE_INSERT` BEFORE INSERT ON `auditorium` FOR EACH ROW
 BEGIN
 IF NEW.stage_size <= '0' or NEW.green_rooms <= 0
           THEN
@@ -57,9 +57,9 @@ CREATE TABLE IF NOT EXISTS Screen (
 
 DELIMITER $$
 
-DROP TRIGGER IF EXISTS dbms_projectphase2.screen_BEFORE_INSERT$$
-USE `dbms_projectphase2`$$
-CREATE DEFINER = CURRENT_USER TRIGGER `dbms_projectphase2`.`screen_BEFORE_INSERT` BEFORE INSERT ON `screen` FOR EACH ROW
+DROP TRIGGER IF EXISTS dbms_projectphase3.screen_BEFORE_INSERT$$
+USE `dbms_projectphase3`$$
+CREATE DEFINER = CURRENT_USER TRIGGER `dbms_projectphase3`.`screen_BEFORE_INSERT` BEFORE INSERT ON `screen` FOR EACH ROW
 BEGIN
 IF NEW.size = '0' 
           THEN
@@ -71,9 +71,9 @@ DELIMITER ;
 
 DELIMITER $$
 
-DROP TRIGGER IF EXISTS dbms_projectphase2.hall_AFTER_INSERT$$
-USE `dbms_projectphase2`$$
-CREATE DEFINER = CURRENT_USER TRIGGER `dbms_projectphase2`.`hall_AFTER_INSERT` AFTER INSERT ON `hall` FOR EACH ROW
+DROP TRIGGER IF EXISTS dbms_projectphase3.hall_AFTER_INSERT$$
+USE `dbms_projectphase3`$$
+CREATE DEFINER = CURRENT_USER TRIGGER `dbms_projectphase3`.`hall_AFTER_INSERT` AFTER INSERT ON `hall` FOR EACH ROW
 BEGIN
 DECLARE HALLcount INT;
 DECLARE SCREENcount INT;
@@ -98,9 +98,9 @@ CREATE TABLE IF NOT EXISTS shows (
 
 DELIMITER $$
  
-DROP TRIGGER IF EXISTS dbms_projectphase2.shows_BEFORE_INSERT$$
-USE `dbms_projectphase2`$$
-CREATE DEFINER=`root`@`localhost` TRIGGER `dbms_projectphase2`.`shows_BEFORE_INSERT` BEFORE INSERT ON `shows` FOR EACH ROW
+DROP TRIGGER IF EXISTS dbms_projectphase3.shows_BEFORE_INSERT$$
+USE `dbms_projectphase3`$$
+CREATE DEFINER=`root`@`localhost` TRIGGER `dbms_projectphase3`.`shows_BEFORE_INSERT` BEFORE INSERT ON `shows` FOR EACH ROW
 BEGIN
 IF NEW.show_name = '0' 
           THEN
@@ -129,9 +129,9 @@ CREATE TABLE IF NOT EXISTS reservation (
 
 DELIMITER $$
  
-DROP TRIGGER IF EXISTS dbms_projectphase2.reservation_BEFORE_INSERT$$
-USE `dbms_projectphase2`$$
-CREATE DEFINER = CURRENT_USER TRIGGER `dbms_projectphase2`.`reservation_BEFORE_INSERT` BEFORE INSERT ON `reservation` FOR EACH ROW
+DROP TRIGGER IF EXISTS dbms_projectphase3.reservation_BEFORE_INSERT$$
+USE `dbms_projectphase3`$$
+CREATE DEFINER = CURRENT_USER TRIGGER `dbms_projectphase3`.`reservation_BEFORE_INSERT` BEFORE INSERT ON `reservation` FOR EACH ROW
 BEGIN
 IF NEW.r_date = 0 
           THEN
@@ -155,9 +155,9 @@ CREATE TABLE IF NOT EXISTS movie (
 
 DELIMITER $$
  
-DROP TRIGGER IF EXISTS dbms_projectphase2.movie_BEFORE_INSERT$$
-USE `dbms_projectphase2`$$
-CREATE DEFINER = CURRENT_USER TRIGGER `dbms_projectphase2`.`movie_BEFORE_INSERT` BEFORE INSERT ON `movie` FOR EACH ROW
+DROP TRIGGER IF EXISTS dbms_projectphase3.movie_BEFORE_INSERT$$
+USE `dbms_projectphase3`$$
+CREATE DEFINER = CURRENT_USER TRIGGER `dbms_projectphase3`.`movie_BEFORE_INSERT` BEFORE INSERT ON `movie` FOR EACH ROW
 BEGIN
 IF NEW.rating < '0' 
           THEN
@@ -182,9 +182,9 @@ CREATE TABLE IF NOT EXISTS performance (
  
 DELIMITER $$
  
-DROP TRIGGER IF EXISTS dbms_projectphase2.performance_BEFORE_INSERT$$
-USE `dbms_projectphase2`$$
-CREATE DEFINER = CURRENT_USER TRIGGER `dbms_projectphase2`.`performance_BEFORE_INSERT` BEFORE INSERT ON `performance` FOR EACH ROW
+DROP TRIGGER IF EXISTS dbms_projectphase3.performance_BEFORE_INSERT$$
+USE `dbms_projectphase3`$$
+CREATE DEFINER = CURRENT_USER TRIGGER `dbms_projectphase3`.`performance_BEFORE_INSERT` BEFORE INSERT ON `performance` FOR EACH ROW
 BEGIN
 IF NEW.performers = '0' 
           THEN
@@ -198,7 +198,7 @@ DELIMITER ;
 
 
 CREATE TABLE IF NOT EXISTS eventTable (
-    e_id VARCHAR(25),
+    e_id mediumint NOT NULL auto_increment,
     show_id VARCHAR(25) NOT NULL,
     time_event TIME,
     date_event DATE,
@@ -208,13 +208,13 @@ CREATE TABLE IF NOT EXISTS eventTable (
         REFERENCES shows (show_id)
         ON DELETE CASCADE ON UPDATE CASCADE
 );
-USE `dbms_projectphase2`;
+USE `dbms_projectphase3`;
  
 DELIMITER $$
  
-DROP TRIGGER IF EXISTS dbms_projectphase2.eventTable_BEFORE_INSERT$$
-USE `dbms_projectphase2`$$
-CREATE DEFINER = CURRENT_USER TRIGGER `dbms_projectphase2`.`eventTable_BEFORE_INSERT` BEFORE INSERT ON `eventTable` FOR EACH ROW
+DROP TRIGGER IF EXISTS dbms_projectphase3.eventTable_BEFORE_INSERT$$
+USE `dbms_projectphase3`$$
+CREATE DEFINER = CURRENT_USER TRIGGER `dbms_projectphase3`.`eventTable_BEFORE_INSERT` BEFORE INSERT ON `eventTable` FOR EACH ROW
 BEGIN
 IF NEW.ticket_price <= '0' 
           THEN
@@ -227,9 +227,9 @@ END$$
 DELIMITER ;
 DELIMITER $$
 
-DROP TRIGGER IF EXISTS dbms_projectphase2.eventtable_AFTER_INSERT$$
-USE `dbms_projectphase2`$$
-CREATE DEFINER = CURRENT_USER TRIGGER `dbms_projectphase2`.`eventtable_AFTER_INSERT` AFTER INSERT ON `eventtable` FOR EACH ROW
+DROP TRIGGER IF EXISTS dbms_projectphase3.eventtable_AFTER_INSERT$$
+USE `dbms_projectphase3`$$
+CREATE DEFINER = CURRENT_USER TRIGGER `dbms_projectphase3`.`eventtable_AFTER_INSERT` AFTER INSERT ON `eventtable` FOR EACH ROW
 BEGIN
 DECLARE EVENTDATE INT;
 set EVENTDATE = (select count(*) from eventTable ET, reservation  RES WHERE ET.show_id  = RES.show_id  and ET.date_event  < RES.R_DATE) ;
@@ -243,7 +243,7 @@ END$$
 DELIMITER ;
 
 CREATE TABLE IF NOT EXISTS customer (
-    customer_id VARCHAR(15),
+    customer_id mediumint NOT NULL auto_increment,
     customer_name VARCHAR(25),
     phone_no VARCHAR(25),
     email_id VARCHAR(70),
@@ -252,15 +252,16 @@ CREATE TABLE IF NOT EXISTS customer (
 );
 
 CREATE TABLE IF NOT EXISTS booking (
-    booking_id VARCHAR(25),
-    e_id VARCHAR(25) NOT NULL,
-    customer_id VARCHAR(25) NOT NULL,
+    booking_id mediumint NOT NULL auto_increment,
+    e_id mediumint NOT NULL,
+    customer_id mediumint NOT NULL,
     num_tickets INT(3),
     price INT(10),
     booking_date DATE,
     booking_time TIME,
     booking_lable VARCHAR(10),
     PRIMARY KEY (booking_id),
+    index(booking_date),
     CONSTRAINT FOREIGN KEY (e_id)
         REFERENCES eventTable (e_id)
         ON DELETE CASCADE ON UPDATE CASCADE,
@@ -268,13 +269,13 @@ CREATE TABLE IF NOT EXISTS booking (
         REFERENCES customer (customer_id)
         ON DELETE CASCADE ON UPDATE CASCADE
 );
-USE `dbms_projectphase2`;
+USE `dbms_projectphase3`;
  
 DELIMITER $$
  
-DROP TRIGGER IF EXISTS dbms_projectphase2.booking_BEFORE_INSERT$$
-USE `dbms_projectphase2`$$
-CREATE DEFINER = CURRENT_USER TRIGGER `dbms_projectphase2`.`booking_BEFORE_INSERT` BEFORE INSERT ON `booking` FOR EACH ROW
+DROP TRIGGER IF EXISTS dbms_projectphase3.booking_BEFORE_INSERT$$
+USE `dbms_projectphase3`$$
+CREATE DEFINER = CURRENT_USER TRIGGER `dbms_projectphase3`.`booking_BEFORE_INSERT` BEFORE INSERT ON `booking` FOR EACH ROW
 BEGIN
 IF NEW.num_tickets <= 0 or new.price = 0 
           THEN
@@ -288,9 +289,9 @@ DELIMITER ;
 
 DELIMITER $$
  
-DROP TRIGGER IF EXISTS dbms_projectphase2.customer_BEFORE_INSERT$$
-USE `dbms_projectphase2`$$
-CREATE DEFINER = CURRENT_USER TRIGGER `dbms_projectphase2`.`customer_BEFORE_INSERT` BEFORE INSERT ON `customer` FOR EACH ROW
+DROP TRIGGER IF EXISTS dbms_projectphase3.customer_BEFORE_INSERT$$
+USE `dbms_projectphase3`$$
+CREATE DEFINER = CURRENT_USER TRIGGER `dbms_projectphase3`.`customer_BEFORE_INSERT` BEFORE INSERT ON `customer` FOR EACH ROW
 BEGIN
 IF NEW.phone_no = '0' 
           THEN
