@@ -145,6 +145,52 @@ def pq10():
     colNames = [i[0] for i in cursor.description]
     return render_template('q10.html', dbstuff = data, columns= colNames, query = query)
 
+@app.route('/q11', methods=['POST']) # viewtop 10
+def pq11():
+    bid = request.form['query']
+    bid = '"'+bid+'"'
+    query = 'SELECT	* FROM	customer HAVING customer_id IN (SELECT booking.customer_id	FROM  booking WHERE  booking_id = '+bid+')'
+    cursor = mysql.connection.cursor()
+    cursor.execute(query)
+    data = cursor.fetchall()
+    colNames = [i[0] for i in cursor.description]
+    return render_template('q11.html', dbstuff = data, columns= colNames, query = query)
+
+@app.route('/q12', methods=['POST']) # viewtop 10
+def pq12():
+    hid = request.form['query']
+    hid = '"'+hid+'"'
+    query = 'SELECT	shows.show_name FROM shows WHERE	shows.show_id IN (SELECT  eventtable.show_id FROM  eventtable HAVING eventtable.show_id IN (SELECT  reservation.show_id FROM reservation WHERE reservation.hall_id = '+hid+'))'
+    cursor = mysql.connection.cursor()
+    cursor.execute(query)
+    data = cursor.fetchall()
+    colNames = [i[0] for i in cursor.description]
+    return render_template('q12.html', dbstuff = data, columns= colNames, query = query)
+
+@app.route('/q13', methods=['POST']) # viewtop 10
+def pq13():
+    rating = request.form['query']
+    rating = '"%'+rating+'%"'
+    num = request.form['num']
+    query = 'SELECT	shows.show_name FROM shows WHERE shows.show_id IN (SELECT ALL movie.show_id FROM  movie WHERE  rating like '+rating+' GROUP BY movie.rating) LIMIT '+num
+    cursor = mysql.connection.cursor()
+    cursor.execute(query)
+    data = cursor.fetchall()
+    colNames = [i[0] for i in cursor.description]
+    return render_template('q13.html', dbstuff = data, columns= colNames, query = query)
+
+@app.route('/q14', methods=['POST']) # viewtop 10
+def pq14():
+    cnum = request.form['query']
+    num = request.form['num']
+    query = 'SELECT DISTINCT	show_name, release_date FROM movie,	shows WHERE shows.show_id IN (SELECT show_id FROM  eventtable  GROUP BY show_id HAVING COUNT(show_id) > '+cnum+')  AND release_date = 2017 LIMIT '+num
+    cursor = mysql.connection.cursor()
+    cursor.execute(query)
+    data = cursor.fetchall()
+    colNames = [i[0] for i in cursor.description]
+    return render_template('q14.html', dbstuff = data, columns= colNames, query = query)
+
+
 
 
 
@@ -199,6 +245,14 @@ def q12():
 @app.route('/execute/q8', methods = ['POST','GET'])
 def q8():
     return render_template('q8.html')
+
+@app.route('/execute/q13', methods = ['POST','GET'])
+def q13():
+    return render_template('q13.html')
+
+@app.route('/execute/q14', methods = ['POST','GET'])
+def q14():
+    return render_template('q14.html')
 
 
 

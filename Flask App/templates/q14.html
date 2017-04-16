@@ -65,31 +65,17 @@
 
         <div class="form-group">
             <br>
-            <p>Q5. Querying event ID and ticket price for a selected show</p>
+            <p>Q14. shows having greater than the given number of events.</p>
             <br>
-            <form method="POST" action="/q5">
-                <label for="comment">Please select show name:</label>
-                <select name="query">
-                    <option value="Christopherborough">Christopherborough</option>
-                    <option value="Liumouth">Liumouth</option>
-                    <option value="South Deborahpor">South Deborahpor</option>
-                    <option value="Lynnside">Lynnside</option>
-                    <option value="Michaelland">Michaelland</option>
-                    <option value="Port Kylebury">Port Kylebury</option>
-                    <option value="Wareport">Wareport</option>
-                    <option value="Port Jeremyview">Port Jeremyview</option>
-                    <option value="Coxmouth">Coxmouth</option>
-                    <option value="New Jamiemouth">New Jamiemouth</option>
-                    <option value="Trujillostad">Trujillostad</option>
-                    <option value="West Wendy">West Wendy</option>
-                    <option value="Camposshire">Camposshire</option>
-                    <option value="Lucasmouth">Lucasmouth</option>
-                    <option value="Jesuschester">Jesuschester</option>
-                    <option value="Russellmouth">Russellmouth</option>
-                    <option value="Angiehaven">Angiehaven</option>
+            <form method="POST" action="/q14">
+                <label for="comment">Enter cnum:</label>
+                <textarea class="form-control" rows="1" id="t" name='query'></textarea>
+                <label>Number of results to display:</label>
+                <textarea class="form-control" rows="1" id="t" name='num'></textarea>
 
 
-                </select>
+
+
 
         </div>
         <input type="submit" class="btn btn-info" value="Run Query"> </button>
