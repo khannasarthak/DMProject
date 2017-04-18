@@ -35,7 +35,7 @@
 
 
         <div class="alert alert-success" role="alert">
-            <h4 class="alert-heading">Booking Successful!</h4> You have booked <code>{{ tnum }}</code> tickets for <code>{{ name_show }}</code> on <code>{{ date_show }}</code>
+            <h4 class="alert-heading">Booking Successful!</h4> You have booked <code>{{ tnum }}</code> tickets for <code>{{ name_show }}</code> for <code>{{ date_show }}</code>
         </div>
         <br>
         <a href="{{ url_for('user') }}">
@@ -43,6 +43,7 @@
         </a>
         <br>
         <row>
+            <br>
             <row> Your last executed query: <code> {{ query }}</code>
                 <br>
                 <br>
