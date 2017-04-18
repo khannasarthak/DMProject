@@ -24,6 +24,29 @@ def process():
     colNames = [i[0] for i in cursor.description]
     return render_template('execute.html', dbstuff = data, columns= colNames, query = query)
 
+@app.route('/puser', methods=['POST'])
+def puser():
+    query = 'SELECT show_name,date_event,time_event,ticket_price from shows,eventtable LIMIT 10'
+    cursor = mysql.connection.cursor()
+    cursor.execute(query)
+    data = cursor.fetchall()
+    colNames = [i[0] for i in cursor.description]
+    return render_template('userl.html', dbstuff = data, columns= colNames, query = query)
+
+@app.route('/puserl', methods=['POST'])
+def puserl():
+    values = request.form['gender']
+    tickets = request.form['numt']
+    print ('++++++++++++++++')
+    print (values,tickets)
+    query = 'SELECT show_name,date_event,time_event,ticket_price from shows,eventtable LIMIT 10'
+    # cursor = mysql.connection.cursor()
+    # cursor.execute(query)
+    # data = cursor.fetchall()
+    # colNames = [i[0] for i in cursor.description]
+    # return render_template('userd.html', dbstuff = data, columns= colNames, query = query)
+    return render_template('userd.html', query = query)
+
 @app.route('/q3', methods=['POST']) # viewtop 10
 def pq3():
     num = request.form['query']
@@ -259,6 +282,15 @@ def q14():
 @app.route('/user', methods = ['POST','GET'])
 def user():
     return render_template('user.html')
+
+@app.route('/userl', methods = ['POST','GET'])
+def userl():
+    return render_template('userl.html')
+
+@app.route('/userd', methods = ['POST','GET'])
+def userd():
+    return render_template('userl.html')
+
 
 
 if __name__=='__main__':
