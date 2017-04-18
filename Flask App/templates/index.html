@@ -28,24 +28,22 @@
 
 
 
-        <div class="container-fluid">
-          <div class="jumbotron">
-      <h1 class="display-3">Theater Reservataion system</h1>
-      <hr class="my-2">
-      <p>Enter exact MySQL query to execute</p>
-      <row>
-          <div class="form-group">
-            <form method="POST" action="/process">
-              <label for="comment">MySQL query:</label>
-              <textarea class="form-control" rows="5" id="comment"  name='query'></textarea>
+    <div class="container-fluid">
+        <div class="jumbotron">
+            <h1 class="display-3">Theater Reservation system</h1>
+            <hr class="my-2">
+            <p>Who are you?</p>
+            <row>
+                <a href="{{ url_for('execute') }}">
+                    <button type="button" class="btn btn-primary btn-lg">Administrator</button>
+                </a>
+                <a href="{{ url_for('user') }}">
+                    <button type="button" class="btn btn-primary btn-lg">User</button>
+                </a>
+            </row>
 
-          </div>
-          <input type="submit" class="btn btn-primary btn-lg" value="Run Query"> </button>
-          </form>
-      </row>
-
-    </div>
         </div>
+    </div>
 
 
 
