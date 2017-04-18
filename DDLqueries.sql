@@ -125,7 +125,7 @@ CREATE TABLE IF NOT EXISTS reservation (
         REFERENCES shows (show_id)
         ON DELETE CASCADE ON UPDATE CASCADE
 );
-
+CREATE INDEX index_reservation ON reservation (r_date);
 
 DELIMITER $$
  
@@ -208,6 +208,9 @@ CREATE TABLE IF NOT EXISTS eventTable (
         REFERENCES shows (show_id)
         ON DELETE CASCADE ON UPDATE CASCADE
 );
+
+CREATE INDEX index_eventtable ON eventTable (date_event);
+
 USE `dbms_projectphase3`;
  
 DELIMITER $$
