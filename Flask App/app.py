@@ -23,7 +23,7 @@ def process():
     data = cursor.fetchall()
     colNames = [i[0] for i in cursor.description]
     return render_template('execute.html', dbstuff = data, columns= colNames, query = query)
-
+######################################### USER QUERIES ##################################################
 @app.route('/puser', methods=['POST'])
 def puser():
     query = 'SELECT show_name,date_event,time_event,ticket_price from shows,eventtable LIMIT 10'
@@ -34,7 +34,7 @@ def puser():
     return render_template('userl.html', dbstuff = data, columns= colNames, query = query)
 
 @app.route('/puserl', methods=['POST'])
-def puserl():
+def puserl(): # ahve to put insert here
     values = request.form['gender']
     tickets = request.form['numt']
     print ('++++++++++++++++')
@@ -47,6 +47,8 @@ def puserl():
     # return render_template('userd.html', dbstuff = data, columns= colNames, query = query)
     return render_template('userd.html', query = query)
 
+
+################################################ ADMIN QUERIES #######################################
 @app.route('/q3', methods=['POST']) # viewtop 10
 def pq3():
     num = request.form['query']
@@ -215,7 +217,7 @@ def pq14():
 
 
 
-
+######################################## APP ROUTES #####################################
 
 @app.route('/execute', methods = ['POST','GET'])
 def execute():
