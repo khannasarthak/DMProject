@@ -29,41 +29,43 @@
 
 
     <div class="container-fluid">
-        <h1>Customer booking</h1>
-        <p>Choose the show, date, time to </p>
+        <h1>D2 Customer booking</h1>
+        <p> </p>
         <row>
             <div class="form-group">
-                <form method="POST" action="/puser">
-                    <label for="comment">MySQL query:</label>
+                <form method="POST" action="/puserd2">
 
-                    <!--
-                    <select name='query'>
-                        {% for row in dbstuff %}{% for d in row %}
-                        <option value="{{ d }}"> {{ d }}</option>
-                        {% endfor %}{% endfor %}
-                    </select>
                     <select name='query1'>
-                        {% for row in dbstuff %}{% for d in row %}
-                        <option value="{{ d }}"> {{ d }}</option>
-                        {% endfor %}{% endfor %}
+
+                        <option value="{{ name_show}}">{{ name_show }}</option>
+
                     </select>
-                    <select name='query2'>
-                        {% for row in dbstuff %}{% for d in row %}
-                        <option value="{{ d }}"> {{ d }}</option>
-                        {% endfor %}{% endfor %}
+                    <br>
+                    <select name='query'>
+
+                        <option value="{{ date_show}}">{{ date_show }}</option>
+
                     </select>
-                    <select name='query3'>
-                        {% for row in dbstuff %}{% for d in row %}
-                        <option value="{{ d }}"> {{ d }}</option>
-                        {% endfor %}{% endfor %}
-                    </select>
--->
-                    {% for row in dbstuff %}
+                    <br>
+                    <label for="comment">Enter number of tickets:</label>
+                    <input type='text' name="numt">
+                    <br>
+
+
+
+
+                    <!--                    {% for row in dbstuff %}-->
+                    <!--
                     <input type="radio" name="gender" value="{{ row }}" checked> {{ row }}
                     <br>{% endfor %}
+                    <br>
+-->
+
+
+
 
             </div>
-            <input type="submit" class="btn btn-info" value="Load event details"> </button>
+            <input type="submit" class="btn btn-info" value="Book Tickets"> </button>
             </form>
         </row>
         <br>
@@ -74,18 +76,23 @@
                 <br>
 
             </row>
-            <!--
+
             <table class="table table-striped table-bordered">
                 <thead>
+
                     <tr>
                         {% for i in columns %}
                         <th>{{ i }}</th>
                         {% endfor %}
                     </tr>
+
+
                 </thead>
+
                 <tbody>
                     {% for row in dbstuff %}
                     <tr>
+
                         {% for d in row %}
                         <td>{{ d }}</td>
                         {% endfor %}
@@ -93,7 +100,6 @@
                     {% endfor %}
                 </tbody>
             </table>
--->
         </row>
     </div>
 

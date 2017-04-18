@@ -26,7 +26,7 @@ def process():
 ######################################### USER QUERIES ##################################################
 @app.route('/puser', methods=['POST'])
 def puser():
-    query = 'SELECT show_name,date_event,time_event,ticket_price from shows,eventtable LIMIT 10'
+    query = 'SELECT distinct show_name from shows LIMIT 15'
     cursor = mysql.connection.cursor()
     cursor.execute(query)
     data = cursor.fetchall()
@@ -35,17 +35,74 @@ def puser():
 
 @app.route('/puserl', methods=['POST'])
 def puserl(): # ahve to put insert here
-    values = request.form['gender']
-    tickets = request.form['numt']
-    print ('++++++++++++++++')
-    print (values,tickets)
-    query = 'SELECT show_name,date_event,time_event,ticket_price from shows,eventtable LIMIT 10'
+    showname= request.form['query']
+    k = str(showname[:-2])
+    # print ('++'+k+'++')
+    shownamet = '"%'+k+'%"'
+    # shownamet = shownamet.replace(' ', '')
+    # name_show.strip()
+    # name_show = "'"+name_show+"'"
+
+    query = 'SELECT date_event from eventtable where show_id in (select show_id from shows where show_name like '+shownamet+')'
+    print ('++++++++D1++++++++')
+    print (showname,'++')
+    cursor = mysql.connection.cursor()
+    cursor.execute(query)
+    data = cursor.fetchall()
+    colNames = [i[0] for i in cursor.description]
+    return render_template('userd.html', dbstuff = data, columns= colNames, query = query,name_show= showname)
+    # return render_template('userd.html', query = query, )
+
+@app.route('/puserd', methods=['POST'])
+def puserd(): # ahve to put insert here
+    showname= request.form['query1']
+    k = str(showname[:-2])
+    # print ('++'+k+'++')
+    shownamet = '"%'+k+'%"'
+    showdate = request.form['query']
+    showdatet = '"'+showdate+'"'
+    # shownamet = shownamet.replace(' ', '')
+    # name_show.strip()
+    # name_show = "'"+name_show+"'"
+    print ('++++++++D2++++++++')
+    print (k,'++',showdate)
+    query = 'SELECT s.show_name,e.time_event,e.date_event,e.ticket_price from eventtable e join shows s on e.show_id = s.show_id where s.show_id in (select show_id from shows where show_name like '+shownamet+') and e.date_event = '+showdatet
+    print ('-----------------')
+    print (query)
+    cursor = mysql.connection.cursor()
+    cursor.execute(query)
+    data = cursor.fetchall()
+    colNames = [i[0] for i in cursor.description]
+    return render_template('userd2.html', dbstuff = data, columns= colNames, query = query,name_show= showname,date_show = showdate)
+    # return render_template('userd.html', query = query, )
+
+@app.route('/puserd2', methods=['POST'])
+def puserd2(): # ahve to put insert here
+    showname= request.form['query1']
+    k = str(showname[:-2])
+    # print ('++'+k+'++')
+    shownamet = '"%'+k+'%"'
+    showdate = request.form['query']
+    showdatet = '"'+showdate+'"'
+    tnum = request.form['numt']
+
+    print ('++++++++INSERT++++++++')
+    print (tnum,'++',shownamet,'++', showdatet)
+    # shownamet = shownamet.replace(' ', '')
+    # name_show.strip()
+    # name_show = "'"+name_show+"'"
+    # print ('++++++++D2++++++++')
+    # print (k,'++',showdate)
+    # query = 'SELECT s.show_name,e.time_event,e.date_event,e.ticket_price from eventtable e join shows s on e.show_id = s.show_id where s.show_id in (select show_id from shows where show_name like '+shownamet+') and e.date_event = '+showdatet
+    # print ('-----------------')
+    # print (query)
     # cursor = mysql.connection.cursor()
     # cursor.execute(query)
     # data = cursor.fetchall()
     # colNames = [i[0] for i in cursor.description]
-    # return render_template('userd.html', dbstuff = data, columns= colNames, query = query)
-    return render_template('userd.html', query = query)
+    # return render_template('userinsert.html', dbstuff = data, columns= colNames, query = query,name_show= showname,date_show = showdate, tnum = numt)
+    return render_template('userinsert.html',name_show= showname,date_show = showdate, tnum = tnum)
+
 
 
 ################################################ ADMIN QUERIES #######################################
@@ -291,7 +348,18 @@ def userl():
 
 @app.route('/userd', methods = ['POST','GET'])
 def userd():
-    return render_template('userl.html')
+    return render_template('userd.html')
+
+@app.route('/userd2', methods = ['POST','GET'])
+def userd2():
+    return render_template('userd2.html')
+@app.route('/userinsert', methods = ['POST','GET'])
+def userinsert():
+    return render_template('userinsert.html')
+
+@app.route('/userconf', methods = ['POST','GET'])
+def userconf():
+    return render_template('userconf.html')
 
 
 
