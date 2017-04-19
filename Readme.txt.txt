@@ -16,6 +16,8 @@ Data generation and table population
 
 5. Execute any queries on the database.
 
+6. The folder "Flask App" contains the web implementation of the project.
+
 
 
 
