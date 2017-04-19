@@ -23,6 +23,7 @@ def process():
     data = cursor.fetchall()
     colNames = [i[0] for i in cursor.description]
     return render_template('execute.html', dbstuff = data, columns= colNames, query = query)
+
 ######################################### USER QUERIES ##################################################
 @app.route('/puser', methods=['POST'])
 def puser():
@@ -86,8 +87,83 @@ def puserd2(): # ahve to put insert here
     showdatet = '"'+showdate+'"'
     tnum = request.form['numt']
 
-    print ('++++++++INSERT++++++++')
-    print (tnum,'++',shownamet,'++', showdatet)
+    ########### SHOW ID #################
+    query_showid = 'SELECT shows.show_id from shows, eventtable where shows.show_id = eventtable.show_id and shows.show_name like '+shownamet
+    cursor = mysql.connection.cursor()
+    cursor.execute(query_showid)
+    datashow = cursor.fetchall()
+    showid = datashow[0][0]
+    showid=str(showid)
+    ################ E ID ######################
+    query_eid = 'SELECT e_id from eventtable e join shows s on e.show_id = s.show_id where s.show_id in (select show_id from shows where show_name like '+shownamet+') and e.date_event = '+showdatet
+    cursor = mysql.connection.cursor()
+    cursor.execute(query_eid)
+    datashow = cursor.fetchall()
+    eid = datashow[0][0]
+    eid= str(eid)
+
+    ################ Total Price ######################
+    query_tprice = 'SELECT distinct ticket_price from eventtable where e_id = '+str(eid)
+    cursor = mysql.connection.cursor()
+    cursor.execute(query_tprice)
+    datashow = cursor.fetchall()
+    tprice = datashow[0][0]
+    totalprice = int(tprice)*int(tnum)
+
+    ####### INSERT INTO CUSTOMER #############
+    cname= request.form['cname']
+    cname = '"'+cname+'"'
+    emailid= request.form['emailid']
+    emailid = '"'+emailid+'"'
+    cnum= request.form['cnum']
+    cnum = '"'+cnum+'"'
+    cardnum= request.form['numcard']
+    cardnum = '"'+cardnum+'"'
+    query_custin = 'INSERT into customer(customer_name,phone_no,email_id,payment_details) values('+cname+','+cnum+','+emailid+','+cardnum+')'
+    print ('------------',query_custin)
+    cursor.execute(query_custin)
+    print ('++++++++CUSTOMER INSERTED++++++++')
+    mysql.connection.commit()
+
+
+    ########### CUST ID ##############
+    query_cid = 'SELECT max(customer_id) from customer order by customer_id desc'
+    cursor = mysql.connection.cursor()
+    cursor.execute(query_cid)
+    data = cursor.fetchall()
+    cust_id = data[0][0]+1 # has to go into insert
+
+
+
+
+    ################ CUR DATE AND TIME #############
+    query_time = 'SELECT CURTIME();'
+    cursor = mysql.connection.cursor()
+    cursor.execute(query_time)
+    datashow = cursor.fetchall()
+    ctime = datashow[0][0]
+    ctime = str(ctime)
+    ctime = '"'+ctime+'"'
+    query_date = 'SELECT CURDATE();'
+    cursor = mysql.connection.cursor()
+    cursor.execute(query_date)
+    datashow = cursor.fetchall()
+    cdate = datashow[0][0]
+    cdate = str(cdate)
+    cdate = '"'+cdate+'"'
+    print ('++++++++INSERT DATA++++++++')
+    print (eid,cust_id,tnum,totalprice,ctime,cdate)
+
+
+    ####### INSERT INTO BOOKING #############
+
+    query_insert = 'INSERT into booking(e_id,customer_id,num_tickets,price,booking_date,booking_time,booking_lable) values('+str(eid)+','+str(cust_id-1)+','+str(tnum)+','+str(totalprice)+','+str(cdate)+','+str(ctime)+',"YES")'
+    print (query_insert)
+    cursor.execute(query_insert)
+    print ('++++++++ BOOKING UPDATED++++++++')
+    mysql.connection.commit()
+
+
     # shownamet = shownamet.replace(' ', '')
     # name_show.strip()
     # name_show = "'"+name_show+"'"
@@ -100,8 +176,8 @@ def puserd2(): # ahve to put insert here
     # cursor.execute(query)
     # data = cursor.fetchall()
     # colNames = [i[0] for i in cursor.description]
-    # return render_template('userinsert.html', dbstuff = data, columns= colNames, query = query,name_show= showname,date_show = showdate, tnum = numt)
-    return render_template('userinsert.html',name_show= showname,date_show = showdate, tnum = tnum)
+    return render_template('userinsert.html', dbstuff = data, query = query_insert, query1 = query_custin,name_show= showname,date_show = showdate, tnum = tnum, totprice = totalprice)
+    # return render_template('userinsert.html',name_show= showname,date_show = showdate, tnum = tnum)
 
 
 
