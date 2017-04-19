@@ -16,7 +16,15 @@ Data generation and table population
 
 5. Execute any queries on the database.
 
-6. The folder "Flask App" contains the web implementation of the project.
+Folder Strcuture:
+
+1. The folder "Flask App" contains the web implementation of the project.
+
+2. 'Phase_3_DML' contains the queries that we are implementing on the web app.
+
+3. 'Phase_3_tables' contains the CSV's that were generated from the datagen.py script and these are being used to populate the tables.
+
+4. The file 'DDLqueries' is defining the schema, creating tables and importing the data. 
 
 
 
